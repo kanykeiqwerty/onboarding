@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
         kwargs.setdefault('is_staff', False)
         kwargs.setdefault('is_superuser', False)
+        
         return self._create_user(email, password, **kwargs)
     
     def create_superuser(self, email, password, **kwargs):
@@ -35,7 +36,7 @@ class UserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
-    # password = models.CharField(max_length=100)
+    
     
     username = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True)

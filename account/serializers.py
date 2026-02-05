@@ -9,20 +9,14 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(min_length=6, max_length=100, required=True, write_only=True)
+    
     password = serializers.CharField(min_length=6, max_length=100, required=True, write_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'password2')
+        fields = ('email', 'password')
     
-    def validate(self, attrs):
-        password2 = attrs.get('password2')
-        if attrs.get('password') != password2:
-            raise serializers.ValidationError('Passwords did not match!')
-        if not attrs.get('password').isalnum():
-            raise serializers.ValidationError('Password field must be contain alpha symbols and numbers!')
-        return attrs
+    
     
     def create(self, validated_data):
         user = User.objects.create_user(

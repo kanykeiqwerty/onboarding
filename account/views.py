@@ -25,7 +25,7 @@ class RegistrationView(GenericAPIView):
     
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)  # Изменено
+        serializer = self.get_serializer(data=request.data)  
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             return Response(
@@ -33,23 +33,6 @@ class RegistrationView(GenericAPIView):
                 status=status.HTTP_201_CREATED
             )
 
-# class ActivationView(APIView):
-#     permission_classes = (permissions.AllowAny,)
-
-#     def get(self, request, activation_code):
-#         try:
-#             user = User.objects.get(activation_code=activation_code)
-#             user.is_active = True
-#             user.activation_code = ''
-#             user.save()
-#             return Response({
-#                 'msg': 'Successfully activated!'},
-#                 status=200)
-#         except User.DoesNotExist:
-#             return Response(
-#                 {'msg': 'Link expired!'},
-#                 status=400
-#             )
 
 
 class LoginApiView(TokenObtainPairView):
