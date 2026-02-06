@@ -42,7 +42,7 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('first_name', 'last_name')
-    list_filter = (RoleFilter, 'is_active')
+    list_filter = (RoleFilter, 'is_active', 'position', 'department')
     list_per_page = 20
 
     def get_queryset(self, request):

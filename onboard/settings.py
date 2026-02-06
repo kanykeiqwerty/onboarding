@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-us%3ka-z$py=&jp5uzxu4kxxvj75-qk&dp&jcc35=1dgcz3d0!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    
     'rest_auth',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'account',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -58,12 +60,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 
     # 'account.middleware.RoleCheckMiddleware',
 
    
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'onboard.urls'
 
 TEMPLATES = [

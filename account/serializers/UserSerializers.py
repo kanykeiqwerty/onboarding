@@ -5,6 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import gettext_lazy as _
 
+from account.models import DepartmentEnum
+
 User=get_user_model()
 
 class InternCreateSerializer(serializers.ModelSerializer):
@@ -33,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
     Сериализатор для отображения информации о пользователе
     """
     role = serializers.SerializerMethodField()
-    
+    department = serializers.ChoiceField(choices=[(dep.name, dep.value) for dep in DepartmentEnum])
+    position = serializers.ChoiceField(choices=[], required=False)
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'is_active', 'role', 'date_joined')
@@ -56,3 +59,26 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'is_active')
+
+
+class UserSelfSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+            'role',
+            'date_joined',
+        )
+        read_only_fields = ('id', 'email', 'role', 'date_joined')
+
+    def get_role(self, obj):
+        if obj.is_superuser:
+            return 'superadmin'
+        elif obj.is_staff:
+            return 'admin'
+        return 'intern'
