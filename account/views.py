@@ -187,3 +187,17 @@ class CurrentUserView(APIView):
         user = request.user
         serializer = serializers.UserSerializer(user)
         return Response(serializer.data)
+
+
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
+
+
+class SuperAdminUserView(ListAPIView, RetrieveUpdateAPIView):
+    """
+    Общий список пользователей + смена ролей (только суперадмин)
+    """
+    permission_classes = (IsSuperAdmin,)
+    serializer_class = serializers.SuperAdminUserSerializer
+    pagination_class = StandartResultsPagination
+    queryset = User.objects.all().order_by('-date_joined')
+    lookup_field = 'pk'

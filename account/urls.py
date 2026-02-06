@@ -4,7 +4,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     # path('register/', views.RegistrationView.as_view()),
-   
+    path('superadmin/users/', views.SuperAdminUserView.as_view()),
+    path('superadmin/users/<int:pk>/', views.SuperAdminUserView.as_view()),
     path('login/', views.LoginApiView.as_view()),
     path('logout/', views.LogoutApiView.as_view()),
     # Управление админами (только суперадмин)
