@@ -1,19 +1,22 @@
 from django.urls import path
-from account import views
+from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('register/', views.RegistrationView.as_view()),
+    # path('register/', views.RegistrationView.as_view()),
    
     path('login/', views.LoginApiView.as_view()),
     path('logout/', views.LogoutApiView.as_view()),
-    # path('refresh/', TokenRefreshView.as_view()),
-    # path('forgot/', views.ForgotPasswordView.as_view()),
-    # path('restore/', views.RestorePasswordView.as_view()),
-
-    # path('spam-follow/', views.FollowSpamApi.as_view()),
+    # Управление админами (только суперадмин)
+    path('admin/create/', views.AdminCreateView.as_view(), name='admin-create'),
+    path('admin/list/', views.AdminListView.as_view(), name='admin-list'),
+    path('admin/<int:pk>/', views.AdminDetailView.as_view(), name='admin-detail'),
     
-
-    # pathot/', views.ForgotPasswordView.as_view()),
-    # path('restore('forg/', views.RestorePasswordView.as_view()),
+    # Управление стажерами (админы и суперадмин)
+    path('intern/create/', views.InternCreateView.as_view(), name='intern-create'),
+    path('intern/list/', views.InternListView.as_view(), name='intern-list'),
+    path('intern/<int:pk>/', views.InternDetailView.as_view(), name='intern-detail'),
+    
+    # Информация о текущем пользователе
+    path('me/', views.CurrentUserView.as_view(), name='current-user'),
 ]
