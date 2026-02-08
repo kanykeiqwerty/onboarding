@@ -35,11 +35,11 @@ class UserSerializer(serializers.ModelSerializer):
     Сериализатор для отображения информации о пользователе
     """
     role = serializers.SerializerMethodField()
-    department = serializers.ChoiceField(choices=[(dep.name, dep.value) for dep in DepartmentEnum])
-    position = serializers.ChoiceField(choices=[], required=False)
+    department = serializers.ChoiceField(choices=[(dep.name, dep.value) for dep in DepartmentEnum], required=False, allow_null=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'is_active', 'role', 'date_joined')
+        fields = ('id', 'email', 'first_name', 'last_name', 'department', 'position', 'is_active', 'role', 'date_joined')
         read_only_fields = ('id', 'date_joined')
     
     def get_role(self, obj):

@@ -51,6 +51,10 @@ INSTALLED_APPS = [
     'account',
     'news',
     'feedback',
+    'onboarding_app',
+    'regulations',
+    'schedule',
+    'instructions',
     'corsheaders',
 ]
 

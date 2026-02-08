@@ -66,6 +66,8 @@ class AdminDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
     def get_serializer_class(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return UserSerializers.UserSerializer
         if self.request.method in ['PUT', 'PATCH']:
             return UserSerializers.UserUpdateSerializer
         return UserSerializers.UserSerializer

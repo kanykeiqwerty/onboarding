@@ -15,7 +15,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     GET /api/v1/news/ - список активных новостей для слайдера
     GET /api/v1/news/{id}/ - детальная информация о новости (лайтбокс)
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # Новости доступны всем
 
     def get_queryset(self):
         return News.objects.filter(is_active=True)
