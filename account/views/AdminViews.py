@@ -2,7 +2,7 @@ from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateD
 from rest_framework import permissions, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth import get_user_model
