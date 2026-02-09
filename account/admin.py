@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin import SimpleListFilter
+from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
@@ -36,14 +37,22 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
-        'get_role',        # ← Django ищет метод НИЖЕ
+        'get_role',
         'is_active',
         'date_joined',
     )
 
-    search_fields = ('first_name', 'last_name')
+    search_fields = ('first_name', 'last_name', 'email')
     list_filter = (RoleFilter, 'is_active', 'position', 'department')
     list_per_page = 20
+
+    # Все поля, включая readonly
+    fields = ('email', 'password', 'first_name', 'last_name', 'position', 
+              'department', 'is_active', 'is_staff', 'is_superuser',
+              'date_joined', 'last_login')  # добавлены поля с датами
+    
+    # Поля только для чтения
+    readonly_fields = ('date_joined', 'last_login')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -59,3 +68,10 @@ class UserAdmin(admin.ModelAdmin):
         return 'intern'
 
     get_role.short_description = 'Role'
+    
+    def save_model(self, request, obj, form, change):
+        # Если пароль был изменен и не хеширован
+        if 'password' in form.changed_data:
+            if obj.password and not obj.password.startswith('pbkdf2_sha256$'):
+                obj.password = make_password(obj.password)
+        super().save_model(request, obj, form, change)
