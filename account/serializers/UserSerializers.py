@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import gettext_lazy as _
 
 from account.models import DepartmentEnum
+from account.utils import send_intern_credentials_email
+from onboard import settings
 
 User=get_user_model()
 
@@ -20,6 +22,7 @@ class InternCreateSerializer(serializers.ModelSerializer):
         fields = ('email', 'password', 'first_name', 'last_name')
     
     def create(self, validated_data):
+        plain_password = validated_data['password']
         user = User.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
@@ -27,6 +30,13 @@ class InternCreateSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', ''),
             is_staff=False,  
             is_superuser=False
+        )
+
+        login_url = getattr(settings, 'FRONTEND_LOGIN_URL', 'http://localhost:3000/login')
+        send_intern_credentials_email(
+            user_email=user.email,
+            password=plain_password,
+            login_url=login_url
         )
         return user   
     
