@@ -16,6 +16,8 @@ Including another URLconf
 """
 # from django.contrib import admin
 # from django.urls import path
+from django.conf.urls.static import static
+from onboard import settings
 from django.urls import path, include, re_path
 from django.contrib import admin
 from drf_yasg.views import get_schema_view
@@ -39,4 +41,4 @@ urlpatterns = [
     path('api/v1/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/v1/account/', include('account.urls')),
     #    path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,11 +1,10 @@
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView
 from rest_framework import permissions, status
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
+
 from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth import get_user_model
-from account.serializers import AuthorizationSerializers, UserSerializers, AdminSerielizers
+from account.serializers import UserSerializers
 from account.permission import IsAdmin, IsSuperAdmin
 
 

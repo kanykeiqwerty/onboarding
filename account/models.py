@@ -68,6 +68,34 @@ class CustomUser(AbstractUser):
         null=True,
         default=None
     )
+    profile_photo = models.ImageField(
+        upload_to='profile_photos/',
+        blank=True,
+        null=True,
+        help_text='Фото профиля'
+    )
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text='Телефон'
+    )
+    telegram = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='Telegram username'
+    )
+    linkedin = models.URLField(
+        blank=True,
+        null=True,
+        help_text='LinkedIn профиль'
+    )
+    github = models.URLField(
+        blank=True,
+        null=True,
+        help_text='GitHub профиль'
+    )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

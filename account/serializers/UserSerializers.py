@@ -73,6 +73,11 @@ class UserSelfSerializer(serializers.ModelSerializer):
             'last_name',
             'role',
             'date_joined',
+            'profile_photo',
+            'phone',
+            'telegram',
+            'linkedin',
+            'github',
         )
         read_only_fields = ('id', 'email', 'role', 'date_joined')
 
@@ -82,3 +87,19 @@ class UserSelfSerializer(serializers.ModelSerializer):
         elif obj.is_staff:
             return 'admin'
         return 'intern'
+    
+    def validate_profile_photo(self, value):
+        """Валидация размера и формата фото"""
+        if value:
+            # Проверка размера (например, максимум 5MB)
+            if value.size > 5 * 1024 * 1024:
+                raise serializers.ValidationError("Размер файла не должен превышать 5MB")
+            
+            # Проверка формата
+            valid_extensions = ['jpg', 'jpeg', 'png', 'gif']
+            ext = value.name.split('.')[-1].lower()
+            if ext not in valid_extensions:
+                raise serializers.ValidationError(
+                    f"Неподдерживаемый формат. Используйте: {', '.join(valid_extensions)}"
+                )
+        return value
