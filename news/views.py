@@ -32,7 +32,7 @@ class EmployeeViewSet(viewsets.ReadOnlyModelViewSet):
 
     GET /api/v1/employees/ - список активных сотрудников для слайдера
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # Сотрудники доступны всем
     serializer_class = EmployeeSerializer
 
     def get_queryset(self):
