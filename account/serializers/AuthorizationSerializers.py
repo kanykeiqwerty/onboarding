@@ -76,6 +76,7 @@ class LogoutSerializer(serializers.Serializer):
         try:
             RefreshToken(self.token).blacklist()
         except TokenError:
+
             self.fail('bad_token')
 
 
@@ -106,3 +107,6 @@ class RestorePasswordSerializer(serializers.Serializer):
         user.activation_code = ''
         user.save()
         return user
+
+            
+

@@ -2,7 +2,9 @@ from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateD
 from rest_framework import permissions, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from rest_framework.response import Response
+
 from rest_framework.pagination import PageNumberPagination
 
 from django.contrib.auth import get_user_model
@@ -66,6 +68,10 @@ class AdminDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
     def get_serializer_class(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            return UserSerializers.UserSerializer
+
         if self.request.method in ['PUT', 'PATCH']:
             return UserSerializers.UserUpdateSerializer
         return UserSerializers.UserSerializer

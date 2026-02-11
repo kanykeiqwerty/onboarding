@@ -9,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 from account.serializers import AuthorizationSerializers, UserSerializers, AdminSerielizers
 from account.permission import IsAdmin, IsSuperAdmin
+
 from account.send_email import send_reset_password
 
 class StandartResultsPagination(PageNumberPagination):
@@ -50,6 +51,7 @@ class LogoutApiView(GenericAPIView):
         return Response('Successfully loged out', status=204)
 
 
+
 class ForgotPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -74,6 +76,7 @@ class RestorePasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Password changed successfully!', status=200)
+
 
 
 

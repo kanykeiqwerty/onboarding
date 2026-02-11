@@ -1,0 +1,10 @@
+Django==4.2.28
+djangorestframework
+djangorestframework-simplejwt
+python-decouple
+drf-yasg
+django-cors-headers
+psycopg2-binary
+Pillow
+django-filter
+

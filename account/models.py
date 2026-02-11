@@ -49,7 +49,6 @@ class DepartmentEnum(Enum):
 
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
-    
     activation_code = models.CharField(max_length=255, blank=True)
     username = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True)
@@ -68,6 +67,7 @@ class CustomUser(AbstractUser):
         null=True,
         default=None
     )
+
     profile_photo = models.ImageField(
         upload_to='profile_photos/',
         blank=True,
@@ -96,6 +96,7 @@ class CustomUser(AbstractUser):
         null=True,
         help_text='GitHub профиль'
     )
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -117,6 +118,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
+
     def create_activation_code(self):
         import uuid
         code = str(uuid.uuid4())

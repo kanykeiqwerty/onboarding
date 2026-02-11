@@ -8,8 +8,10 @@ urlpatterns = [
     path('superadmin/users/<int:pk>/', Views.SuperAdminUserView.as_view()),
     path('login/', Views.LoginApiView.as_view()),
     path('logout/', Views.LogoutApiView.as_view()),
+
     path('forgot/', Views.ForgotPasswordView.as_view()),
     path('restore/', Views.RestorePasswordView.as_view()),
+
     # Управление админами (только суперадмин)
     path('admin/create/', AdminViews.AdminCreateView.as_view(), name='admin-create'),
     path('admin/list/', AdminViews.AdminListView.as_view(), name='admin-list'),
