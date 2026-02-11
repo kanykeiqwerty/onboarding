@@ -32,7 +32,7 @@ class InternCreateSerializer(serializers.ModelSerializer):
             is_superuser=False
         )
 
-        login_url = getattr(settings, 'FRONTEND_LOGIN_URL', 'http://localhost:3000/login')
+        login_url = getattr(settings, 'FRONTEND_LOGIN_URL', 'http://localhost:8000/api/v1/account/login')
         send_intern_credentials_email(
             user_email=user.email,
             password=plain_password,
