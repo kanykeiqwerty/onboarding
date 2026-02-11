@@ -1,13 +1,53 @@
 from django.contrib import admin
-from .models import WorkScheduleType, UserSchedule, Holiday
+from django import forms
+from .models import WorkScheduleType, UserSchedule, Holiday, WeekDay
 
 
+# --- Форма для WorkScheduleType с чекбоксами ---
+class WorkScheduleTypeForm(forms.ModelForm):
+    work_days = forms.MultipleChoiceField(
+        choices=WeekDay.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label='Рабочие дни',
+        required=True,
+    )
+
+    class Meta:
+        model = WorkScheduleType
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk and self.instance.work_days:
+            self.initial['work_days'] = self.instance.work_days
+
+    def clean_work_days(self):
+        return list(map(int, self.cleaned_data['work_days']))
+
+
+# --- Inline для пользователей графика ---
+class UserScheduleInline(admin.TabularInline):
+    model = UserSchedule
+    fields = ('user_display', 'created_at')
+    readonly_fields = ('user_display', 'created_at')
+    extra = 0
+    can_delete = False
+
+    def user_display(self, obj):
+        name = f"{obj.user.first_name} {obj.user.last_name}".strip()
+        return name or obj.user.email
+    user_display.short_description = 'Пользователь'
+
+
+# --- Админка для WorkScheduleType ---
 @admin.register(WorkScheduleType)
 class WorkScheduleTypeAdmin(admin.ModelAdmin):
+    form = WorkScheduleTypeForm
     list_display = ('name', 'start_time', 'end_time', 'is_default', 'is_active')
     list_filter = ('is_default', 'is_active', 'created_at')
     search_fields = ('name', 'description')
     list_editable = ('is_default', 'is_active')
+    inlines = [UserScheduleInline]
 
     fieldsets = (
         ('Основная информация', {
@@ -15,7 +55,6 @@ class WorkScheduleTypeAdmin(admin.ModelAdmin):
         }),
         ('Рабочие дни', {
             'fields': ('work_days',),
-            'description': 'Список номеров дней недели (1=Пн, 2=Вт, ..., 7=Вс). Например: [1,2,3,4,5] для Пн-Пт'
         }),
         ('Время работы', {
             'fields': ('start_time', 'end_time', 'lunch_start', 'lunch_end')
@@ -30,6 +69,7 @@ class WorkScheduleTypeAdmin(admin.ModelAdmin):
     )
 
 
+# --- Админка для UserSchedule ---
 @admin.register(UserSchedule)
 class UserScheduleAdmin(admin.ModelAdmin):
     list_display = ('user_display', 'schedule_type', 'created_at', 'updated_at')
@@ -43,6 +83,7 @@ class UserScheduleAdmin(admin.ModelAdmin):
     user_display.short_description = 'Пользователь'
 
 
+# --- Админка для Holiday ---
 @admin.register(Holiday)
 class HolidayAdmin(admin.ModelAdmin):
     list_display = ('date', 'name', 'is_working_day')
@@ -56,4 +97,3 @@ class HolidayAdmin(admin.ModelAdmin):
             'fields': ('date', 'name', 'is_working_day')
         }),
     )
-

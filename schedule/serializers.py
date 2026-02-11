@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WorkScheduleType, UserSchedule, Holiday
+from .models import WorkScheduleType, UserSchedule, Holiday, WeekDay
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -7,12 +7,21 @@ User = get_user_model()
 
 class WorkScheduleTypeSerializer(serializers.ModelSerializer):
     """Сериализатор для типов графиков работы"""
+    work_days = serializers.ListField(
+        child=serializers.ChoiceField(choices=WeekDay.choices)
+    )
+    users = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = WorkScheduleType
-        fields = ['id', 'name', 'description', 'work_days', 'start_time', 'end_time',
-                 'lunch_start', 'lunch_end', 'breaks', 'is_default', 'is_active']
-        read_only_fields = ['id']
+        fields = [
+            'id', 'name', 'description', 'work_days', 'start_time', 'end_time',
+            'lunch_start', 'lunch_end', 'breaks', 'is_default', 'is_active', 'users'
+        ]
+        read_only_fields = ['id', 'users']
+
+    def get_users(self, obj):
+        return [{'id': u.user.id, 'email': u.user.email} for u in obj.users.all()]
 
 
 class UserScheduleSerializer(serializers.ModelSerializer):
@@ -23,7 +32,7 @@ class UserScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSchedule
         fields = ['id', 'user', 'user_email', 'schedule_type', 'schedule_details',
-                 'created_at', 'updated_at']
+                  'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 
@@ -44,4 +53,3 @@ class HolidaySerializer(serializers.ModelSerializer):
         model = Holiday
         fields = ['id', 'date', 'name', 'is_working_day', 'created_at']
         read_only_fields = ['id', 'created_at']
-
