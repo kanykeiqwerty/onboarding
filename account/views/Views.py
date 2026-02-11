@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from account.serializers import AuthorizationSerializers, UserSerializers, AdminSerielizers
 from account.permission import IsAdmin, IsSuperAdmin
 
+from account.send_email import send_reset_password
 
 class StandartResultsPagination(PageNumberPagination):
     page_size = 10
@@ -48,6 +49,36 @@ class LogoutApiView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Successfully loged out', status=204)
+
+
+
+class ForgotPasswordView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = AuthorizationSerializers.ForgotPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            user = User.objects.get(email=serializer.data.get('email'))
+            user.create_activation_code()
+            user.save()
+            send_reset_password(user)
+            return Response('Check your mail!', status=200)
+        except User.DoesNotExist:
+            return Response('User with this email does not exist!', status=400)
+
+
+class RestorePasswordView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = AuthorizationSerializers.RestorePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response('Password changed successfully!', status=200)
+
+
+
 
 
 class CurrentUserView(APIView):
